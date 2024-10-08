@@ -93,6 +93,7 @@ type BooleanCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   type: String!
   ui: JSON
 }
@@ -160,6 +161,8 @@ type CollectionBreadcrumb {
 }
 
 input CollectionFilterParameter {
+  _and: [CollectionFilterParameter!]
+  _or: [CollectionFilterParameter!]
   createdAt: DateOperators
   description: StringOperators
   id: IDOperators
@@ -181,7 +184,7 @@ input CollectionListOptions {
   filter: CollectionFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -270,6 +273,12 @@ type Coordinate {
   y: Float!
 }
 
+"""
+A Country of the world which your shop operates in.
+
+The `code` field is typically a 2-character ISO code such as "GB", "US", "DE" etc. This code is used in certain inputs such as
+`UpdateAddressInput` and `CreateAddressInput` to specify the country.
+"""
 type Country implements Node & Region {
   code: String!
   createdAt: DateTime!
@@ -312,6 +321,13 @@ type CouponCodeLimitError implements ErrorResult {
   message: String!
 }
 
+"""
+Input used to create an Address.
+
+The countryCode must correspond to a `code` property of a Country that has been defined in the
+Vendure server. The `code` property is typically a 2-character ISO code such as "GB", "US", "DE" etc.
+If an invalid code is passed, the mutation will fail.
+"""
 input CreateAddressInput {
   city: String
   company: String
@@ -334,6 +350,14 @@ input CreateCustomerInput {
   lastName: String!
   phoneNumber: String
   title: String
+}
+
+input CreateSellerInput {
+  customFields: JSON
+  emailAddress: String!
+  firstName: String!
+  lastName: String!
+  password: String!
 }
 
 """
@@ -836,6 +860,7 @@ interface CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   type: String!
   ui: JSON
 }
@@ -858,6 +883,8 @@ type Customer implements Node {
 }
 
 input CustomerFilterParameter {
+  _and: [CustomerFilterParameter!]
+  _or: [CustomerFilterParameter!]
   createdAt: DateOperators
   emailAddress: StringOperators
   firstName: StringOperators
@@ -887,7 +914,7 @@ input CustomerListOptions {
   filter: CustomerFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -950,6 +977,7 @@ type DateTimeCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   step: Int
   type: String!
   ui: JSON
@@ -1031,10 +1059,17 @@ type Facet implements Node {
   name: String!
   translations: [FacetTranslation!]!
   updatedAt: DateTime!
+
+  """
+  Returns a paginated, sortable, filterable list of the Facet's values. Added in v2.1.0.
+  """
+  valueList(options: FacetValueListOptions): FacetValueList!
   values: [FacetValue!]!
 }
 
 input FacetFilterParameter {
+  _and: [FacetFilterParameter!]
+  _or: [FacetFilterParameter!]
   code: StringOperators
   createdAt: DateOperators
   id: IDOperators
@@ -1053,7 +1088,7 @@ input FacetListOptions {
   filter: FacetFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -1088,6 +1123,7 @@ type FacetValue implements Node {
   createdAt: DateTime!
   customFields: JSON
   facet: Facet!
+  facetId: ID!
   id: ID!
   languageCode: LanguageCode!
   name: String!
@@ -1108,6 +1144,42 @@ input FacetValueFilterInput {
   or: [ID!]
 }
 
+input FacetValueFilterParameter {
+  _and: [FacetValueFilterParameter!]
+  _or: [FacetValueFilterParameter!]
+  code: StringOperators
+  createdAt: DateOperators
+  facetId: IDOperators
+  id: IDOperators
+  languageCode: StringOperators
+  name: StringOperators
+  updatedAt: DateOperators
+}
+
+type FacetValueList implements PaginatedList {
+  items: [FacetValue!]!
+  totalItems: Int!
+}
+
+input FacetValueListOptions {
+  """Allows the results to be filtered"""
+  filter: FacetValueFilterParameter
+
+  """
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
+  """
+  filterOperator: LogicalOperator
+
+  """Skips the first n results, for use in pagination"""
+  skip: Int
+
+  """Specifies which properties to sort the results by"""
+  sort: FacetValueSortParameter
+
+  """Takes n results, for use in pagination"""
+  take: Int
+}
+
 """
 Which FacetValues are present in the products returned
 by the search, and in what quantity.
@@ -1115,6 +1187,15 @@ by the search, and in what quantity.
 type FacetValueResult {
   count: Int!
   facetValue: FacetValue!
+}
+
+input FacetValueSortParameter {
+  code: SortOrder
+  createdAt: SortOrder
+  facetId: SortOrder
+  id: SortOrder
+  name: SortOrder
+  updatedAt: SortOrder
 }
 
 type FacetValueTranslation {
@@ -1135,6 +1216,7 @@ type FloatCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   step: Float
   type: String!
   ui: JSON
@@ -1184,6 +1266,8 @@ type HistoryEntry implements Node {
 }
 
 input HistoryEntryFilterParameter {
+  _and: [HistoryEntryFilterParameter!]
+  _or: [HistoryEntryFilterParameter!]
   createdAt: DateOperators
   id: IDOperators
   type: StringOperators
@@ -1200,7 +1284,7 @@ input HistoryEntryListOptions {
   filter: HistoryEntryFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -1238,6 +1322,7 @@ enum HistoryEntryType {
   ORDER_CANCELLATION
   ORDER_COUPON_APPLIED
   ORDER_COUPON_REMOVED
+  ORDER_CUSTOMER_UPDATED
   ORDER_FULFILLMENT
   ORDER_FULFILLMENT_TRANSITION
   ORDER_MODIFIED
@@ -1316,6 +1401,7 @@ type IntCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   step: Int
   type: String!
   ui: JSON
@@ -1825,6 +1911,7 @@ type LocaleStringCustomFieldConfig implements CustomField {
   nullable: Boolean
   pattern: String
   readonly: Boolean
+  requiresPermission: [Permission!]
   type: String!
   ui: JSON
 }
@@ -1837,6 +1924,7 @@ type LocaleTextCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   type: String!
   ui: JSON
 }
@@ -1886,7 +1974,7 @@ type Mutation {
 
   """Create a new Customer Address"""
   createCustomerAddress(input: CreateAddressInput!): Address!
-  createStripePaymentIntent: String
+  createStripePaymentIntent: String!
 
   """Delete an existing Address"""
   deleteCustomerAddress(id: ID!): Success!
@@ -1921,6 +2009,7 @@ type Mutation {
   3. The Customer _must_ be registered _with_ a password. No further action is needed - the Customer is able to authenticate immediately.
   """
   registerCustomerAccount(input: RegisterCustomerInput!): RegisterCustomerAccountResult!
+  registerNewSeller(input: RegisterSellerInput!): Channel
 
   """Remove all OrderLine from the Order"""
   removeAllOrderLines: RemoveOrderItemsResult!
@@ -2148,6 +2237,8 @@ type OrderAddress {
 }
 
 input OrderFilterParameter {
+  _and: [OrderFilterParameter!]
+  _or: [OrderFilterParameter!]
   active: BooleanOperators
   code: StringOperators
   createdAt: DateOperators
@@ -2233,6 +2324,8 @@ type OrderLine implements Node {
 
   """The proratedUnitPrice including tax"""
   proratedUnitPriceWithTax: Money!
+
+  """The quantity of items purchased"""
   quantity: Int!
   taxLines: [TaxLine!]!
   taxRate: Float!
@@ -2265,7 +2358,7 @@ input OrderListOptions {
   filter: OrderFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -2792,6 +2885,7 @@ type Product implements Node {
   createdAt: DateTime!
   customFields: JSON
   description: String!
+  enabled: Boolean!
   facetValues: [FacetValue!]!
   featuredAsset: Asset
   id: ID!
@@ -2810,8 +2904,11 @@ type Product implements Node {
 }
 
 input ProductFilterParameter {
+  _and: [ProductFilterParameter!]
+  _or: [ProductFilterParameter!]
   createdAt: DateOperators
   description: StringOperators
+  enabled: BooleanOperators
   id: IDOperators
   languageCode: StringOperators
   name: StringOperators
@@ -2829,7 +2926,7 @@ input ProductListOptions {
   filter: ProductFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -2927,6 +3024,8 @@ type ProductVariant implements Node {
 }
 
 input ProductVariantFilterParameter {
+  _and: [ProductVariantFilterParameter!]
+  _or: [ProductVariantFilterParameter!]
   createdAt: DateOperators
   currencyCode: StringOperators
   id: IDOperators
@@ -2950,7 +3049,7 @@ input ProductVariantListOptions {
   filter: ProductVariantFilterParameter
 
   """
-  Specifies whether multiple "filter" arguments should be combines with a logical AND or OR operation. Defaults to AND.
+  Specifies whether multiple top-level "filter" fields should be combined with a logical AND or OR operation. Defaults to AND.
   """
   filterOperator: LogicalOperator
 
@@ -2999,6 +3098,7 @@ type Promotion implements Node {
   startsAt: DateTime
   translations: [PromotionTranslation!]!
   updatedAt: DateTime!
+  usageLimit: Int
 }
 
 type PromotionList implements PaginatedList {
@@ -3171,6 +3271,11 @@ input RegisterCustomerInput {
   title: String
 }
 
+input RegisterSellerInput {
+  seller: CreateSellerInput!
+  shopName: String!
+}
+
 type RelationCustomFieldConfig implements CustomField {
   description: [LocalizedString!]
   entity: String!
@@ -3180,6 +3285,7 @@ type RelationCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   scalarFields: [String!]!
   type: String!
   ui: JSON
@@ -3213,6 +3319,7 @@ input SearchInput {
   collectionSlug: String
   facetValueFilters: [FacetValueFilterInput!]
   groupByProduct: Boolean
+  inStock: Boolean
   skip: Int
   sort: SearchResultSortParameter
   take: Int
@@ -3224,21 +3331,10 @@ type SearchReindexResponse {
 }
 
 type SearchResponse {
-  cacheIdentifier: SearchResponseCacheIdentifier
   collections: [CollectionResult!]!
   facetValues: [FacetValueResult!]!
   items: [SearchResult!]!
   totalItems: Int!
-}
-
-"""
-This type is here to allow us to easily purge the Stellate cache
-of any search results where the collectionSlug is used. We cannot rely on
-simply purging the SearchResult type, because in the case of an empty 'items'
-array, Stellate cannot know that that particular query now needs to be purged.
-"""
-type SearchResponseCacheIdentifier {
-  collectionSlug: String
 }
 
 type SearchResult {
@@ -3248,6 +3344,7 @@ type SearchResult {
   description: String!
   facetIds: [ID!]!
   facetValueIds: [ID!]!
+  inStock: Boolean!
   price: SearchResultPrice!
   priceWithTax: SearchResultPrice!
   productAsset: SearchResultAsset
@@ -3368,6 +3465,7 @@ type StringCustomFieldConfig implements CustomField {
   options: [StringFieldOption!]
   pattern: String
   readonly: Boolean
+  requiresPermission: [Permission!]
   type: String!
   ui: JSON
 }
@@ -3465,12 +3563,20 @@ type TextCustomFieldConfig implements CustomField {
   name: String!
   nullable: Boolean
   readonly: Boolean
+  requiresPermission: [Permission!]
   type: String!
   ui: JSON
 }
 
 union TransitionOrderToStateResult = Order | OrderStateTransitionError
 
+"""
+Input used to update an Address.
+
+The countryCode must correspond to a `code` property of a Country that has been defined in the
+Vendure server. The `code` property is typically a 2-character ISO code such as "GB", "US", "DE" etc.
+If an invalid code is passed, the mutation will fail.
+"""
 input UpdateAddressInput {
   city: String
   company: String

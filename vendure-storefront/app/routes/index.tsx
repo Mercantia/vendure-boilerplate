@@ -48,7 +48,7 @@ export default function Index() {
               href="https://www.vendure.io"
               className="text-blue-300 hover:text-blue-500"
             >
-              Vendure
+              Mercantia
             </a>{' '}
             &{' '}
             <a
