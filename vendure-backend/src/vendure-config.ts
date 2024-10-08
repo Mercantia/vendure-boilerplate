@@ -61,6 +61,7 @@ export const config: VendureConfig = {
         } : {}),
     },
     authOptions: {
+        requireVerification: false,
         tokenMethod: ['bearer', 'cookie'],
         superadminCredentials: {
             identifier: process.env.SUPERADMIN_USERNAME,
@@ -89,7 +90,7 @@ export const config: VendureConfig = {
     customFields: {},
     plugins: [
         MultivendorPlugin.init({
-            platformFeePercent: 10,
+            platformFeePercent: 2,
             platformFeeSKU: 'FEE',
         }),
         AssetServerPlugin.init({

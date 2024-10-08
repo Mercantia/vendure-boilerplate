@@ -58,7 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const result = await registerCustomerAccount({ request }, variables);
   if (result.__typename === 'Success') {
-    return redirect('/sign-up/success');
+    return redirect('/vendor-sign-up/success');
   } else {
     const formError: RegisterValidationErrors = {
       form: result.errorCode,
@@ -82,7 +82,7 @@ export default function SignUpPage() {
           <p className="mt-2 text-center text-sm text-gray-600">
             {t('common.or')}{' '}
             <Link
-              to="/sign-in"
+              to="/vendor-sign-in"
               className="font-medium text-primary-600 hover:text-primary-500"
             >
               {t('account.login')}
