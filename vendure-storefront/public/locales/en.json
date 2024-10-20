@@ -202,7 +202,7 @@
   },
   "footer": {
     "title": "Mercantia",
-    "shop": "Top 5",
+    "shop": "Setores",
     "support": "Suporte",
     "subscribeHeader": "Fique atualizado com Mercantia",
     "subscribeIntro": "Seja o primeiro a saber sobre ofertas exclusivas e negócios próximos.",
@@ -242,7 +242,7 @@
     "repoLinkLabel": "Comece agora mesmo!",
     "registrationMessage": "O registro de contas está disponível e você pode criar a sua instância local da Mercantia para uma experiência completa.",
     "registrationError": "Não é possível registrar sua instância na Mercantia!",
-    "shopByCategory": "Explore nossas coleções"
+    "shopByCategory": "Explore nossos setores"
 
   }
 }
