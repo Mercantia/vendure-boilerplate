@@ -135,6 +135,8 @@ export const config: VendureConfig = {
             },
             app: compileUiExtensions({
                 outputPath: path.join(__dirname, '../admin-ui'),
+                extensions: [
+                ],
             }),
         }),
     ],
