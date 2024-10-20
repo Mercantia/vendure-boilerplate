@@ -80,7 +80,7 @@ export default function Index() {
             id="category-heading"
             className="text-2xl font-light tracking-tight text-gray-900"
           >
-            {t('common.shopByCategory')}
+            {t('seller.shopByCategory')}
           </h2>
         </div>
 
