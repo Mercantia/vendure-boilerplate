@@ -1,8 +1,9 @@
 import { SearchQuery } from '~/generated/graphql';
-import { Link } from '@remix-run/react';
+import { Link, useLocation } from '@remix-run/react';
 import { Price } from './Price';
 
 export type ProductCardProps = SearchQuery['search']['items'][number];
+
 export function ProductCard({
   productAsset,
   productName,
@@ -10,11 +11,15 @@ export function ProductCard({
   priceWithTax,
   currencyCode,
 }: ProductCardProps) {
+  const location = useLocation();
+  const pathSegments = location.pathname.split('/');
+  const vendorParam = pathSegments[1]; // Extrai o parâmetro do vendedor da URL
+
   return (
-    <Link className="flex flex-col" prefetch="intent" to={`/products/${slug}`}>
+    <Link className="flex flex-col" prefetch="intent" to={`/${vendorParam}/products/${slug}`}>
       <img
         className="rounded-xl flex-grow object-cover aspect-[7/8]"
-        alt=""
+        alt={productName}
         src={productAsset?.preview + '?w=300&h=400'}
       />
       <div className="h-2" />
