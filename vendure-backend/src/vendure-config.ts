@@ -9,7 +9,6 @@ import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { AdminUiPlugin } from '@vendure/admin-ui-plugin';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { MultivendorPlugin } from './plugins/multivendor-plugin/multivendor.plugin';
-import { compileUiExtensions, setBranding } from '@vendure/ui-devkit/compiler';
 import 'dotenv/config';
 import path from 'path';
 
@@ -133,11 +132,6 @@ export const config: VendureConfig = {
                 hideVendureBranding: true,
                 hideVersion: true,
             },
-            app: compileUiExtensions({
-                outputPath: path.join(__dirname, '../admin-ui'),
-                extensions: [
-                ],
-            }),
         }),
     ],
 };
