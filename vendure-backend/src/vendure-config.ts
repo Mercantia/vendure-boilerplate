@@ -132,7 +132,6 @@ export const config: VendureConfig = {
             },
         }),
         AdminUiPlugin.init({
-            route: 'admin',
             adminUiConfig: {
                 brand: 'Mercantia',
                 hideVendureBranding: true,
