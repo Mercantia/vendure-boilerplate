@@ -14,7 +14,6 @@ import 'dotenv/config';
 import path from 'path';
 
 const isDev: Boolean = process.env.APP_ENV === 'dev';
-const serverPort = +process.env.PORT || 3000;
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -130,13 +129,6 @@ export const config: VendureConfig = {
             adminUiConfig: {
                 apiHost: isDev ? `http://${process.env.PUBLIC_DOMAIN}` : `https://${process.env.PUBLIC_DOMAIN}`,
                 // apiPort: +(process.env.PORT || 3000),
-            },
-        }),
-        AdminUiPlugin.init({
-            route: 'admin',
-            port: serverPort + 2,
-            adminUiConfig: {
-                apiPort: serverPort,
                 brand: 'Mercantia',
                 hideVendureBranding: true,
                 hideVersion: true,
