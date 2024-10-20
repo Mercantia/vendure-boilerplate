@@ -133,9 +133,7 @@ export const config: VendureConfig = {
         }),
         AdminUiPlugin.init({
             route: 'admin',
-            port: serverPort + 2,
             adminUiConfig: {
-                apiPort: serverPort,
                 brand: 'Mercantia',
                 hideVendureBranding: true,
                 hideVersion: true,
