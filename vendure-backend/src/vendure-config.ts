@@ -135,15 +135,6 @@ export const config: VendureConfig = {
             },
             app: compileUiExtensions({
                 outputPath: path.join(__dirname, '../admin-ui'),
-                extensions: [
-                    setBranding({
-                        // The small logo appears in the top left of the screen  
-                        smallLogoPath: path.join(__dirname, '/Mercantialogosq.jpg'),
-                        // The large logo is used on the login page  
-                        largeLogoPath: path.join(__dirname, '/Mercantialogosq.jpg'),
-                        faviconPath: path.join(__dirname, '/Mercantialogosq.jpg'),
-                    }),
-                ],
             }),
         }),
     ],
