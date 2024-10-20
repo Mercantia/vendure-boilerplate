@@ -14,6 +14,7 @@ import 'dotenv/config';
 import path from 'path';
 
 const isDev: Boolean = process.env.APP_ENV === 'dev';
+const serverPort = +process.env.PORT || 3000;
 
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -132,7 +133,10 @@ export const config: VendureConfig = {
             },
         }),
         AdminUiPlugin.init({
+            route: 'admin',
+            port: serverPort + 2,
             adminUiConfig: {
+                apiPort: serverPort,
                 brand: 'Mercantia',
                 hideVendureBranding: true,
                 hideVersion: true,
