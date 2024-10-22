@@ -148,10 +148,10 @@ export const config: VendureConfig = {
             },
         } as EmailPluginOptions | EmailPluginDevModeOptions),
         AdminUiPlugin.init({
-            route: '/',
+            route: '',
             port: 3002,
             adminUiConfig: {
-                apiHost: isDev ? `http://api.${process.env.PUBLIC_DOMAIN}` : `https://api.${process.env.PUBLIC_DOMAIN}`,
+                apiHost: isDev ? `http://${process.env.PUBLIC_DOMAIN}` : `https://${process.env.PUBLIC_DOMAIN}`,
                 // apiPort: +(process.env.PORT || 3000),
                 brand: 'Mercantia',
                 hideVendureBranding: true,
