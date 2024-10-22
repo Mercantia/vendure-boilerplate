@@ -242,7 +242,8 @@
     "repoLinkLabel": "Inicie a sua importação agora mesmo!",
     "registrationMessage": "O registro de contas está disponível e você pode criar a sua instância local da Mercantia para uma experiência completa.",
     "registrationError": "Não é possível registrar sua instância na Mercantia!",
-    "shopByCategory": "Explore nossos setores"
+    "shopByCategory": "Explore nossos setores",
+    "browseCategories": "Confira todos os seguimentos",
 
   }
 }
