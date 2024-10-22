@@ -11,6 +11,7 @@ import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { MultivendorPlugin } from './plugins/multivendor-plugin/multivendor.plugin';
 import 'dotenv/config';
 import path from 'path';
+import { Express } from 'express'; // For custom middleware
 
 const isDev: Boolean = process.env.APP_ENV === 'dev';
 
@@ -42,13 +43,19 @@ const emailPluginOptions = isDev || !process.env.SENDGRID_API_KEY ? {
 
 export const config: VendureConfig = {
     apiOptions: {
-        // hostname: process.env.PUBLIC_DOMAIN,
+        // Hostnames for different services
+        hostname: process.env.PUBLIC_DOMAIN || 'mercantia.app',
         port: +(process.env.PORT || 3000),
+        
+        // Admin API should be served from api.mercantia.app
         adminApiPath: 'admin-api',
+        adminApiHostname: 'api.mercantia.app', // Admin API domain
+
+        // Shop API should be served from shop.mercantia.app
         shopApiPath: 'shop-api',
-        // The following options are useful in development mode,
-        // but are best turned off for production for security
-        // reasons.
+        shopApiHostname: 'shop.mercantia.app', // Shop API domain
+
+        // Development mode options
         ...(isDev ? {
             adminApiPlayground: {
                 settings: { 'request.credentials': 'include' },
@@ -85,32 +92,30 @@ export const config: VendureConfig = {
     paymentOptions: {
         paymentMethodHandlers: [dummyPaymentHandler],
     },
-    // When adding or altering custom field definitions, the database will
-    // need to be updated. See the "Migrations" section in README.md.
     customFields: {
         Product: [
-            { name: 'infoUrl', type: 'string' },  // Product info URL
-            { name: 'downloadable', type: 'boolean' },  // Is product downloadable?
-            { name: 'shortName', type: 'localeString' },  // Shortened product name for localization
-            { name: 'ncm', type: 'string' },  // NCM code (Brazilian import/export classification)
-            { name: 'gtin', type: 'string' },  // GTIN (Global Trade Item Number)
-            { name: 'ean', type: 'string' },  // EAN code (European Article Number)
-            { name: 'brand', type: 'string' },  // Brand name
+            { name: 'infoUrl', type: 'string' },
+            { name: 'downloadable', type: 'boolean' },
+            { name: 'shortName', type: 'localeString' },
+            { name: 'ncm', type: 'string' },
+            { name: 'gtin', type: 'string' },
+            { name: 'ean', type: 'string' },
+            { name: 'brand', type: 'string' },
         ],
         User: [
-            { name: 'socialLoginToken', type: 'string', unique: true },  // Token for social login
-            { name: 'cpf', type: 'string', unique: true },  // CPF (Cadastro de Pessoas Físicas)
-            { name: 'birthDate', type: 'datetime' },  // Date of birth
-            { name: 'phoneNumber', type: 'string' },  // Phone number
+            { name: 'socialLoginToken', type: 'string', unique: true },
+            { name: 'cpf', type: 'string', unique: true },
+            { name: 'birthDate', type: 'datetime' },
+            { name: 'phoneNumber', type: 'string' },
         ],
         Seller: [
-            { name: 'cnpj', type: 'string', unique: true },  // CNPJ (Cadastro Nacional da Pessoa Jurídica)
-            { name: 'companyName', type: 'string' },  // Legal company name
-            { name: 'tradingName', type: 'string' },  // Trading name (fantasy name)
-            { name: 'stateRegistration', type: 'string' },  // State registration number
-            { name: 'municipalRegistration', type: 'string' },  // Municipal registration number
-            { name: 'businessPhone', type: 'string' },  // Business phone number
-            { name: 'responsiblePerson', type: 'string' },  // Name of the responsible person for the company
+            { name: 'cnpj', type: 'string', unique: true },
+            { name: 'companyName', type: 'string' },
+            { name: 'tradingName', type: 'string' },
+            { name: 'stateRegistration', type: 'string' },
+            { name: 'municipalRegistration', type: 'string' },
+            { name: 'businessPhone', type: 'string' },
+            { name: 'responsiblePerson', type: 'string' },
         ],
     },
     plugins: [
@@ -121,9 +126,6 @@ export const config: VendureConfig = {
         AssetServerPlugin.init({
             route: 'assets',
             assetUploadDir: process.env.ASSET_VOLUME_PATH || path.join(__dirname, '../static/assets'),
-            // For local dev, the correct value for assetUrlPrefix should
-            // be guessed correctly, but for production it will usually need
-            // to be set manually to match your production url.
             assetUrlPrefix: isDev ? undefined : `https://${process.env.PUBLIC_DOMAIN}/assets/`,
         }),
         StripePlugin.init({
@@ -148,15 +150,27 @@ export const config: VendureConfig = {
             },
         } as EmailPluginOptions | EmailPluginDevModeOptions),
         AdminUiPlugin.init({
-            route: 'admin',
+            route: 'admin', // Admin UI served at the root path
             port: 3002,
             adminUiConfig: {
                 apiHost: isDev ? `http://${process.env.PUBLIC_DOMAIN}` : `https://${process.env.PUBLIC_DOMAIN}`,
-                // apiPort: +(process.env.PORT || 3000),
                 brand: 'Mercantia',
                 hideVendureBranding: true,
                 hideVersion: true,
             },
         }),
     ],
+    // Middleware to redirect `/` to `admin.mercantia.app`
+    // middleware: [
+    //     {
+    //         handler: (req: any, res: any, next: any) => {
+    //             if (req.hostname === 'mercantia.app' && req.path === '/') {
+    //                 res.redirect(301, 'https://admin.mercantia.app/admin');
+    //             } else {
+    //                 next();
+    //             }
+    //         },
+    //         route: '/',
+    //     },
+    // ],
 };
