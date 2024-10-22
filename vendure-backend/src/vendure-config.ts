@@ -87,7 +87,32 @@ export const config: VendureConfig = {
     },
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.
-    customFields: {},
+    customFields: {
+        Product: [
+            { name: 'infoUrl', type: 'string' },  // Product info URL
+            { name: 'downloadable', type: 'boolean' },  // Is product downloadable?
+            { name: 'shortName', type: 'localeString' },  // Shortened product name for localization
+            { name: 'ncm', type: 'string' },  // NCM code (Brazilian import/export classification)
+            { name: 'gtin', type: 'string' },  // GTIN (Global Trade Item Number)
+            { name: 'ean', type: 'string' },  // EAN code (European Article Number)
+            { name: 'brand', type: 'string' },  // Brand name
+        ],
+        User: [
+            { name: 'socialLoginToken', type: 'string', unique: true },  // Token for social login
+            { name: 'cpf', type: 'string', unique: true },  // CPF (Cadastro de Pessoas Físicas)
+            { name: 'birthDate', type: 'datetime' },  // Date of birth
+            { name: 'phoneNumber', type: 'string' },  // Phone number
+        ],
+        Seller: [
+            { name: 'cnpj', type: 'string', unique: true },  // CNPJ (Cadastro Nacional da Pessoa Jurídica)
+            { name: 'companyName', type: 'string' },  // Legal company name
+            { name: 'tradingName', type: 'string' },  // Trading name (fantasy name)
+            { name: 'stateRegistration', type: 'string' },  // State registration number
+            { name: 'municipalRegistration', type: 'string' },  // Municipal registration number
+            { name: 'businessPhone', type: 'string' },  // Business phone number
+            { name: 'responsiblePerson', type: 'string' },  // Name of the responsible person for the company
+        ],
+    },
     plugins: [
         MultivendorPlugin.init({
             platformFeePercent: 3,
