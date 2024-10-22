@@ -7,34 +7,28 @@ export function CollectionCard({
   collection: CollectionsQuery['collections']['items'][number];
 }) {
   const location = useLocation();
-  // Extract vendorParam from the URL
+  // Extrai o vendorParam da URL
   const pathSegments = location.pathname.split('/');
-  const vendorParam = pathSegments[1]; // The vendor parameter is the second segment
+  const vendorParam = pathSegments[1]; // O parâmetro do vendedor é o segundo segmento
 
-  // Check if the collection is a main collection (has no parent)
-  if (collection.parent === null) {
-    return (
-      <Link
-        to={`/${vendorParam}/collections/${collection.slug}`} // Use vendorParam in the URL
-        prefetch="intent"
-        className="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto"
-      >
-        <span aria-hidden="true">
-          <div className="w-full h-full object-center object-cover">
-            <img src={collection.featuredAsset?.preview + '?w=300&h=300'} alt={collection.name} />
-          </div>
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute w-full bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
-        />
-        <span className="absolute w-full bottom-2 mt-auto text-center text-xl font-bold text-white">
-          {collection.name}
-        </span>
-      </Link>
-    );
-  }
-
-  // Return null if the collection is not a main collection
-  return null;
+  return (
+    <Link
+      to={`/${vendorParam}/collections/${collection.slug}`} // Usa vendorParam na URL
+      prefetch="intent"
+      className="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto"
+    >
+      <span aria-hidden="true">
+        <div className="w-full h-full object-center object-cover">
+          <img src={collection.featuredAsset?.preview + '?w=300&h=300'} alt={collection.name} />
+        </div>
+      </span>
+      <span
+        aria-hidden="true"
+        className="absolute w-full bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
+      />
+      <span className="absolute w-full bottom-2 mt-auto text-center text-xl font-bold text-white">
+        {collection.name}
+      </span>
+    </Link>
+  );
 }

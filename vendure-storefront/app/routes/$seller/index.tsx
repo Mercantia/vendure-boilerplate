@@ -48,14 +48,14 @@ export default function Index() {
               href="https://mercantia.app/millity"
               className="text-blue-300 hover:text-blue-500"
             >
-              Vendure
+              Cartuchos
             </a>{' '}
             &{' '}
             <a
               href="~/routes/__cart/index"
               className="text-red-300 hover:text-red-500"
             >
-              Remix
+              Maquinas para Tattoo
             </a>
           </p>
           <p className="mt-4 text-gray-300 space-x-1">
