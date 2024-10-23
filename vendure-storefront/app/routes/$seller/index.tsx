@@ -55,7 +55,7 @@ export default function Index() {
               href="~/routes/__cart/index"
               className="text-red-300 hover:text-red-500"
             >
-              Maquinas para Tattoo
+              Maquinas para tatuagem
             </a>
           </p>
           <p className="mt-4 text-gray-300 space-x-1">
