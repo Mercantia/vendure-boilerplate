@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { getSellerData, getCollectionsForSeller } from "~/provider/seller/seller";
-import { getVendorNameFromUrl } from "~/utils";
+import { getSellerData, getCollectionsForSeller } from "~/providers/seller/seller";
+import { getVendorNameFromUrl } from "~/utils/vendor-url";
 
 export async function loader({ params, request }: LoaderArgs) {
   const vendureToken = getVendorNameFromUrl(request.url);
