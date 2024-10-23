@@ -9,6 +9,7 @@ import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { AdminUiPlugin } from '@vendure/admin-ui-plugin';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import { MultivendorPlugin } from './plugins/multivendor-plugin/multivendor.plugin';
+import { compileUiExtensions, setBranding } from '@vendure/ui-devkit/compiler';
 import 'dotenv/config';
 import path from 'path';
 
@@ -128,10 +129,29 @@ export const config: VendureConfig = {
             adminUiConfig: {
                 apiHost: isDev ? `http://${process.env.PUBLIC_DOMAIN}` : `https://${process.env.PUBLIC_DOMAIN}`,
                 // apiPort: +(process.env.PORT || 3000),
+            },
+        }),
+        AdminUiPlugin.init({
+            route: 'admin',
+            port: serverPort + 2,
+            adminUiConfig: {
+                apiPort: serverPort,
                 brand: 'Mercantia',
                 hideVendureBranding: true,
                 hideVersion: true,
             },
+            app: compileUiExtensions({
+                outputPath: path.join(__dirname, '../admin-ui'),
+                extensions: [
+                    setBranding({
+                        // The small logo appears in the top left of the screen  
+                        smallLogoPath: path.join(__dirname, '/Mercantialogosq.jpg'),
+                        // The large logo is used on the login page  
+                        largeLogoPath: path.join(__dirname, '/Mercantialogosq.jpg'),
+                        faviconPath: path.join(__dirname, '/Mercantialogosq.jpg'),
+                    }),
+                ],
+            }),
         }),
     ],
 };
