@@ -2,26 +2,6 @@ import { useLoaderData } from "@remix-run/react";
 import { CollectionCard } from "~/components/collections/CollectionCard";
 import { useTranslation } from "react-i18next";
 import { BookOpenIcon } from "@heroicons/react/24/solid";
-import type { LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { getSellerData, getCollectionsForSeller } from "~/providers/seller/seller";
-import { getVendorNameFromUrl } from "~/utils/vendor-url";
-
-export async function loader({ params, request }: LoaderArgs) {
-  const vendureToken = getVendorNameFromUrl(request.url);
-  
-  // Fetch seller data using the vendureToken
-  const sellerData = await getSellerData(vendureToken);
-  
-  // Fetch collections related to this seller
-  const collections = await getCollectionsForSeller(vendureToken);
-
-  return json({
-    vendureToken,
-    sellerData,
-    collections,
-  });
-}
 
 export default function Index() {
   const { collections, sellerData, vendureToken } = useLoaderData<typeof loader>();
