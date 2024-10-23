@@ -2,25 +2,15 @@ import gql from "graphql-tag";
 import { MutationRegisterNewSellerArgs } from "~/generated/graphql";
 import { QueryOptions, sdk } from "~/graphqlWrapper";
 
+// Função para registrar novo vendedor
 export const registerSellerAccount = async (
-    options: QueryOptions,
-    variables: MutationRegisterNewSellerArgs,
-  ) => {
-    return sdk.registerNewSeller(variables, options);
-  };
+  options: QueryOptions,
+  variables: MutationRegisterNewSellerArgs
+) => {
+  return sdk.registerNewSeller(variables, options);
+};
 
-  gql`
-  mutation registerNewSeller($input: RegisterSellerInput!) {
-    registerNewSeller(input: $input) {
-      __typename
-      id
-      code
-      token
-    }
-  }
-`;
-
-// GraphQL query to fetch the seller custom fields
+// Query para buscar os campos customizados do vendedor
 gql`
   query GetSeller($id: ID!) {
     seller(id: $id) {
@@ -39,8 +29,29 @@ gql`
   }
 `;
 
-// Function to get seller custom fields by seller ID
-export const getSellerCustomFields = async (sellerId: string) => {
+// Função para buscar os dados do vendedor
+export const getSellerData = async (sellerId: string) => {
   const response = await sdk.getSeller({ id: sellerId });
   return response.seller;
+};
+
+// Query para buscar as coleções do vendedor
+gql`
+  query GetCollectionsForSeller($sellerId: ID!) {
+    collections(sellerId: $sellerId) {
+      items {
+        id
+        name
+        featuredAsset {
+          preview
+        }
+      }
+    }
+  }
+`;
+
+// Função para buscar as coleções do vendedor
+export const getCollectionsForSeller = async (sellerId: string) => {
+  const response = await sdk.getCollectionsForSeller({ sellerId });
+  return response.collections.items;
 };
