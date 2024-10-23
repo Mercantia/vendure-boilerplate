@@ -19,3 +19,28 @@ export const registerSellerAccount = async (
     }
   }
 `;
+
+// GraphQL query to fetch the seller custom fields
+gql`
+  query GetSeller($id: ID!) {
+    seller(id: $id) {
+      id
+      name
+      customFields {
+        cnpj
+        companyName
+        tradingName
+        stateRegistration
+        municipalRegistration
+        businessPhone
+        responsiblePerson
+      }
+    }
+  }
+`;
+
+// Function to get seller custom fields by seller ID
+export const getSellerCustomFields = async (sellerId: string) => {
+  const response = await sdk.getSeller({ id: sellerId });
+  return response.seller;
+};
