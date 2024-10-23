@@ -5,10 +5,10 @@ import { BookOpenIcon } from "@heroicons/react/24/solid";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { getSellerData, getCollectionsForSeller } from "~/provider/seller/seller";
-import { getVendureTokenFromUrl } from "~/utils";
+import { getVendorNameFromUrl } from "~/utils";
 
 export async function loader({ params, request }: LoaderArgs) {
-  const vendureToken = getVendureTokenFromUrl(request.url);
+  const vendureToken = getVendorNameFromUrl(request.url);
   
   // Fetch seller data using the vendureToken
   const sellerData = await getSellerData(vendureToken);
