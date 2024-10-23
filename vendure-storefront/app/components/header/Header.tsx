@@ -1,4 +1,4 @@
-import { Link, useLoaderData, useLocation } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { SearchBar } from '~/components/header/SearchBar';
 import { useRootLoader } from '~/utils/use-root-loader';
@@ -18,12 +18,7 @@ export function Header({
   const isSignedIn = !!data.activeCustomer.activeCustomer?.id;
   const isScrollingUp = useScrollingUp();
   const { t } = useTranslation();
-  const location = useLocation();
-    
-    // Extrai o vendorParam da URL
-    const pathSegments = location.pathname.split('/');
-    const vendorParam = pathSegments[1]; // O parâmetro do vendedor é o segundo segmento
-  
+
   return (
     <header
       className={classNames(
@@ -37,8 +32,8 @@ export function Header({
             <p className="hidden sm:block">
               {t('vendure.exclusive')}{' '}
               <a
-                href="/sign-up"
-                target="_parent"
+                href="https://funkyton.com/vendure-tutorial/"
+                target="_blank"
                 className="underline"
               >
                 {t('vendure.repoLinkLabel')}
@@ -60,9 +55,9 @@ export function Header({
       </div>
       <div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
         <h1 className="text-white w-10">
-          <Link to={`/${vendorParam}`}>
+          <Link to="/">
             <img
-              src="/Mercantialogosq.jpg"
+              src="/cube-logo-small.webp"
               width={40}
               height={31}
               alt={t('commmon.logoAlt')}
@@ -73,7 +68,7 @@ export function Header({
           {data.collections.map((collection) => (
             <Link
               className="text-sm md:text-base text-gray-200 hover:text-white"
-              to={`/${vendorParam}/collections/${collection.slug}`} // Usa vendorParam na URL
+              to={'/collections/' + collection.slug}
               prefetch="intent"
               key={collection.id}
             >

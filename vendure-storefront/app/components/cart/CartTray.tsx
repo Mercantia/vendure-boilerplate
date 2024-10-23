@@ -23,11 +23,6 @@ export function CartTray({
 }) {
   const currencyCode = activeOrder?.currencyCode || CurrencyCode.Usd;
   const location = useLocation();
-
-  // Extract the seller parameter from the URL
-  const pathSegments = location.pathname.split('/');
-  const sellerParam = pathSegments[1]; // Assumes the seller parameter is the first path segment
-
   const editable = !location.pathname.startsWith('/checkout');
   const { t } = useTranslation();
 
@@ -117,7 +112,7 @@ export function CartTray({
                       </p>
                       <div className="mt-6">
                         <Link
-                          to={`/${sellerParam}/checkout`} // Add sellerParam to the checkout URL
+                          to="/checkout"
                           onClick={() => onClose(false)}
                           className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
                         >

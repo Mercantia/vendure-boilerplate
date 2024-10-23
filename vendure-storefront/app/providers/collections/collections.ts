@@ -1,30 +1,17 @@
 import gql from 'graphql-tag';
 import { sdk } from '../../graphqlWrapper';
+import { listedProductFragment } from '../products/products';
 import { CollectionListOptions } from '~/generated/graphql';
 
 export function getCollections(
   request: Request,
-  options?: CollectionListOptions
+  options?: CollectionListOptions,
 ) {
-  // Get the URL from the request
-  const url = new URL(request.url);
-  
-  // Extract the vendure token from the URL path
-  const pathSegments = url.pathname.split('/').filter(Boolean);
-  const vendureToken = pathSegments[0]; // Assume the first segment is the vendure-token
-  
-  //console.log('Vendure Token:', vendureToken); // Debug log
-
-  const headers = {
-    'vendure-token': vendureToken || '', // Use the retrieved token or fallback
-  };
-
   return sdk
-    .collections({ options }, { headers })
+    .collections({ options }, { request })
     .then((result) => result.collections?.items);
 }
 
-// Your GraphQL queries remain unchanged.
 gql`
   query collections($options: CollectionListOptions) {
     collections(options: $options) {

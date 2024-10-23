@@ -118,7 +118,7 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="icon" href="/Mercantialogosq.jpg" type="image/png"></link>
+        <link rel="icon" href="/favicon.ico" type="image/png"></link>
         <Meta />
         <Links />
       </head>
