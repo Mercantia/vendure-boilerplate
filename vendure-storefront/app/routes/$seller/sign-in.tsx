@@ -50,7 +50,7 @@ export default function SignInPage() {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
+            {/* <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
               <p>{t('vendure.demoCredentials')}</p>
               <p>
                 {t('account.emailAddress')}
@@ -60,7 +60,7 @@ export default function SignInPage() {
               <p>
                 {t('account.password')}: <span className="font-bold">test</span>
               </p>
-            </div>
+            </div> */}
             <login.Form method="post">
               <fieldset disabled={login.state !== 'idle'} className="space-y-6">
                 <input
