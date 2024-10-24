@@ -12,7 +12,7 @@ import path from 'path';
 import { MultivendorPlugin } from './plugins/multivendor-plugin/multivendor.plugin';
 
 const IS_DEV = process.env.APP_ENV === 'dev';
-const serverPort = +process.env.PORT || 3000;
+const serverPort = 3000;
 
 export const config: VendureConfig = {
     apiOptions: {
