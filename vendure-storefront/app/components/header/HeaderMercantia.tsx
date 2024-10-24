@@ -1,4 +1,4 @@
-import { Link, useLoaderData, useLocation } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { SearchBar } from '~/components/header/SearchBar';
 import { useRootLoader } from '~/utils/use-root-loader';
@@ -18,12 +18,7 @@ export function Header({
   const isSignedIn = !!data.activeCustomer.activeCustomer?.id;
   const isScrollingUp = useScrollingUp();
   const { t } = useTranslation();
-  const location = useLocation();
-    
-    // Extrai o vendorParam da URL
-    const pathSegments = location.pathname.split('/');
-    const vendorParam = pathSegments[1]; // O parâmetro do vendedor é o segundo segmento
-  
+
   return (
     <header
       className={classNames(
@@ -31,38 +26,11 @@ export function Header({
         'bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform shadow-xl',
       )}
     >
-      <div className="bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-2 px-2 xl:px-0">
-        <div className="max-w-6xl mx-2 md:mx-auto flex items-center justify-between">
-          <div>
-            <p className="hidden sm:block">
-              {t('vendure.exclusive')}{' '}
-              <a
-                href="/sign-up"
-                target="_parent"
-                className="underline"
-              >
-                {t('vendure.repoLinkLabel')}
-              </a>
-            </p>
-          </div>
-          <div>
-            <Link
-              to={isSignedIn ? '/account' : '/sign-in'}
-              className="flex space-x-1"
-            >
-              <UserIcon className="w-4 h-4"></UserIcon>
-              <span>
-                {isSignedIn ? t('account.myAccount') : t('account.signIn')}
-              </span>
-            </Link>
-          </div>
-        </div>
-      </div>
       <div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
         <h1 className="text-white w-10">
-          <Link to={`/${vendorParam}`}>
+          <Link to="/">
             <img
-              src="/Mercantialogosq.jpg"
+              src="/cube-logo-small.webp"
               width={40}
               height={31}
               alt={t('commmon.logoAlt')}
@@ -70,16 +38,44 @@ export function Header({
           </Link>
         </h1>
         <div className="flex space-x-4 hidden sm:block">
-          {data.collections.map((collection) => (
+          {/* {data.collections.map((collection) => (
             <Link
               className="text-sm md:text-base text-gray-200 hover:text-white"
-              to={`/${vendorParam}/collections/${collection.slug}`} // Usa vendorParam na URL
+              to={'/collections/' + collection.slug}
               prefetch="intent"
               key={collection.id}
             >
               {collection.name}
             </Link>
-          ))}
+          ))} */}
+            <Link
+              className="text-sm md:text-base text-gray-200 hover:text-white"
+              to={'/collections/'}
+              prefetch="intent"
+            >
+              Categorias
+            </Link>
+            <Link
+              className="text-sm md:text-base text-gray-200 hover:text-white"
+              to={'/vendors/'}
+              prefetch="intent"
+            >
+              Empresas
+            </Link>
+            <Link
+              className="text-sm md:text-base text-gray-200 hover:text-white"
+              to={'/vendor-sign-up/'}
+              prefetch="intent"
+            >
+              Cadastrar Negócio
+            </Link>
+            <Link
+              className="text-sm md:text-base text-gray-200 hover:text-white"
+              to={'https://vendure-backend-production-9084.up.railway.app/admin/'}
+              prefetch="intent"
+            >
+              Gerenciar Negócio
+            </Link>
         </div>
         <div className="flex-1 md:pr-8">
           <SearchBar></SearchBar>
@@ -99,6 +95,17 @@ export function Header({
               ''
             )}
           </button>
+        </div>
+        <div>
+        <Link
+              to={isSignedIn ? '/account' : '/sign-in'}
+              className="flex space-x-1 text-white"
+            >
+              <UserIcon className="w-4 h-4"></UserIcon>
+              <span>
+                {isSignedIn ? t('account.myAccount') : t('account.signIn')}
+              </span>
+            </Link>
         </div>
       </div>
     </header>
