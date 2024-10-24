@@ -29,7 +29,7 @@ export function Price({
 }
 
 export function formatPrice(value: number, currency: CurrencyCode) {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency,
   }).format(value / 100);

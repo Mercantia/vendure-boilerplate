@@ -1,6 +1,6 @@
 export default {
   supportedLngs: ['en', 'es', 'pt', 'pt-BR'],
-  fallbackLng: 'en',
+  fallbackLng: 'pt-BR',
   // Disabling suspense is recommended
   react: { useSuspense: false },
   backend: {
