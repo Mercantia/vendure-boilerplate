@@ -4,52 +4,25 @@ import {
     DefaultSearchPlugin,
     VendureConfig,
 } from '@vendure/core';
-import { defaultEmailHandlers, EmailPlugin, EmailPluginDevModeOptions, EmailPluginOptions } from '@vendure/email-plugin';
+import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { AdminUiPlugin } from '@vendure/admin-ui-plugin';
-import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
-import { MultivendorPlugin } from './plugins/multivendor-plugin/multivendor.plugin';
 import 'dotenv/config';
 import path from 'path';
+import { MultivendorPlugin } from './plugins/multivendor-plugin/multivendor.plugin';
 
-const isDev: Boolean = process.env.APP_ENV === 'dev';
-
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-class SendgridEmailSender {
-    async send(email: any) {
-        await sgMail.send({
-            to: email.recipient,
-            from: email.from,
-            subject: email.subject,
-            html: email.body
-        });
-    }
-}
-
-const emailPluginOptions = isDev || !process.env.SENDGRID_API_KEY ? {
-    devMode: true,
-    outputPath: path.join(__dirname, '../static/email/test-emails'),
-    route: 'mailbox'
-} : {
-    emailSender: new SendgridEmailSender(),
-    transport: {
-        type: 'sendgrid',
-        apiKey: process.env.SENDGRID_API_KEY
-    }
-};
+const IS_DEV = process.env.APP_ENV === 'dev';
+const serverPort = +process.env.PORT || 3000;
 
 export const config: VendureConfig = {
     apiOptions: {
-        // hostname: process.env.PUBLIC_DOMAIN,
-        port: +(process.env.PORT || 3000),
+        port: serverPort,
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
         // The following options are useful in development mode,
         // but are best turned off for production for security
         // reasons.
-        ...(isDev ? {
+        ...(IS_DEV ? {
             adminApiPlayground: {
                 settings: { 'request.credentials': 'include' },
             },
@@ -61,18 +34,20 @@ export const config: VendureConfig = {
         } : {}),
     },
     authOptions: {
-        requireVerification: false,
         tokenMethod: ['bearer', 'cookie'],
         superadminCredentials: {
             identifier: process.env.SUPERADMIN_USERNAME,
             password: process.env.SUPERADMIN_PASSWORD,
         },
         cookieOptions: {
-            secret: process.env.COOKIE_SECRET,
+          secret: process.env.COOKIE_SECRET,
         },
     },
     dbConnectionOptions: {
         type: 'postgres',
+        // See the README.md "Migrations" section for an explanation of
+        // the `synchronize` and `migrations` options.
+        synchronize: false,
         migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
         logging: false,
         database: process.env.DB_NAME,
@@ -87,47 +62,68 @@ export const config: VendureConfig = {
     },
     // When adding or altering custom field definitions, the database will
     // need to be updated. See the "Migrations" section in README.md.
-    customFields: {},
+    customFields: {
+        Product: [
+            { name: 'infoUrl', type: 'string' },  // Product info URL
+            { name: 'downloadable', type: 'boolean' },  // Is product downloadable?
+            { name: 'ncm', type: 'string' },  // NCM code (Brazilian import/export classification)
+            { name: 'gtin', type: 'string' },  // GTIN (Global Trade Item Number)
+            { name: 'ean', type: 'string' },  // EAN code (European Article Number)
+            { name: 'brand', type: 'string' },  // Brand name
+        ],
+        Customer: [
+            { name: 'socialLoginToken', type: 'string', unique: true },  // Token for social login
+            { name: 'cpf', type: 'string', unique: true },  // CPF (Cadastro de Pessoas Físicas)
+            { name: 'birthDate', type: 'datetime' },  // Date of birth
+        ],
+        Seller: [
+            { name: 'cnpj', type: 'string', unique: true },  // CNPJ (Cadastro Nacional da Pessoa Jurídica)
+            { name: 'companyName', type: 'string' },  // Legal company name
+            { name: 'tradingName', type: 'string' },  // Trading name (fantasy name)
+            { name: 'stateRegistration', type: 'string' },  // State registration number
+            { name: 'municipalRegistration', type: 'string' },  // Municipal registration number
+            { name: 'businessPhone', type: 'string' },  // Business phone number
+            { name: 'responsiblePerson', type: 'string' },  // Name of the responsible person for the company
+        ],
+    },
     plugins: [
         MultivendorPlugin.init({
-            platformFeePercent: 2,
-            platformFeeSKU: 'FEE',
+            platformFeeSKU: "Fee",
+            platformFeePercent: 3
         }),
         AssetServerPlugin.init({
             route: 'assets',
-            assetUploadDir: process.env.ASSET_VOLUME_PATH || path.join(__dirname, '../static/assets'),
+            assetUploadDir: path.join(__dirname, '../static/assets'),
             // For local dev, the correct value for assetUrlPrefix should
             // be guessed correctly, but for production it will usually need
             // to be set manually to match your production url.
-            assetUrlPrefix: isDev ? undefined : `https://${process.env.PUBLIC_DOMAIN}/assets/`,
-        }),
-        StripePlugin.init({
-            storeCustomersInStripe: true,
-            paymentIntentCreateParams: (injector, ctx, order) => {
-                return {
-                    description: `Order #${order.code} for ${order.customer?.emailAddress}`
-                };
-            }
+            assetUrlPrefix: IS_DEV ? undefined : 'https://mercantia.app/assets/',
         }),
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
         EmailPlugin.init({
-            ...emailPluginOptions,
+            devMode: true,
+            outputPath: path.join(__dirname, '../static/email/test-emails'),
+            route: 'mailbox',
             handlers: defaultEmailHandlers,
-            templatePath: path.join(__dirname, '../static/email/templates'),
+            templateLoader: new FileBasedTemplateLoader(path.join(__dirname, '../static/email/templates')),
             globalTemplateVars: {
-                fromAddress: process.env.EMAIL_FROM_ADDRESS || '"example" <noreply@example.com>',
-                verifyEmailAddressUrl: `${process.env.STOREFRONT_URL}/verify`,
-                passwordResetUrl: `${process.env.STOREFRONT_URL}/password-reset`,
-                changeEmailAddressUrl: `${process.env.STOREFRONT_URL}/verify-email-address-change`
+                // The following variables will change depending on your storefront implementation.
+                // Here we are assuming a storefront running at http://localhost:8080.
+                fromAddress: '"Mercantia" <noreply@mercantia.app>',
+                verifyEmailAddressUrl: 'http://localhost:8080/verify',
+                passwordResetUrl: 'http://localhost:8080/password-reset',
+                changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
             },
-        } as EmailPluginOptions | EmailPluginDevModeOptions),
+        }),
         AdminUiPlugin.init({
             route: 'admin',
-            port: 3002,
+            port: serverPort + 2,
             adminUiConfig: {
-                apiHost: isDev ? `http://${process.env.PUBLIC_DOMAIN}` : `https://${process.env.PUBLIC_DOMAIN}`,
-                // apiPort: +(process.env.PORT || 3000),
+                apiPort: serverPort,
+                brand: 'Mercantia',
+                hideVendureBranding: true,
+                hideVersion: true,
             },
         }),
     ],
