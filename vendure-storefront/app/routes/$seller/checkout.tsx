@@ -14,12 +14,18 @@ export default function Checkout() {
   const location = useLocation();
   const { t } = useTranslation();
 
+  // Extract the vendor parameter from the URL
+  const pathSegments = location.pathname.split('/');
+  const vendorParam = pathSegments[1]; // The vendor parameter is the second segment
+
+  // Adjust state based on the URL with vendorParam
   let state = 'shipping';
-  if (location.pathname === '/checkout/payment') {
+  if (location.pathname === `/${vendorParam}/checkout/payment`) {
     state = 'payment';
-  } else if (location.pathname.startsWith('/checkout/confirmation')) {
+  } else if (location.pathname.startsWith(`/${vendorParam}/checkout/confirmation`)) {
     state = 'confirmation';
   }
+  
   let isConfirmationPage = state === 'confirmation';
 
   return (
