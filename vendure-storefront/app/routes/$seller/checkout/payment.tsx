@@ -159,7 +159,7 @@ export default function CheckoutPayment() {
               <BraintreeDropIn
                 fullAmount={activeOrder?.totalWithTax ?? 0}
                 currencyCode={
-                  activeOrder?.currencyCode ?? ('USD' as CurrencyCode)
+                  activeOrder?.currencyCode ?? ('Brl' as CurrencyCode)
                 }
                 show={true}
                 authorization={brainTreeKey!}

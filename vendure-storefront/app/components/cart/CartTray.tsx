@@ -21,7 +21,7 @@ export function CartTray({
   adjustOrderLine?: (lineId: string, quantity: number) => void;
   removeItem?: (lineId: string) => void;
 }) {
-  const currencyCode = activeOrder?.currencyCode || CurrencyCode.Usd;
+  const currencyCode = activeOrder?.currencyCode || CurrencyCode.Brl;
   const location = useLocation();
 
   // Extract the seller parameter from the URL
