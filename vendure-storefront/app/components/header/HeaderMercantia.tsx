@@ -30,7 +30,7 @@ export function Header({
         <h1 className="text-white w-10">
           <Link to="/">
             <img
-              src="/cube-logo-small.webp"
+              src="/Mercantialogosq.jpg"
               width={40}
               height={31}
               alt={t('commmon.logoAlt')}
@@ -53,14 +53,14 @@ export function Header({
               to={'/collections/'}
               prefetch="intent"
             >
-              Categorias
+              Setores
             </Link>
             <Link
               className="text-sm md:text-base text-gray-200 hover:text-white"
               to={'/vendors/'}
               prefetch="intent"
             >
-              Empresas
+              Negócios
             </Link>
             <Link
               className="text-sm md:text-base text-gray-200 hover:text-white"
