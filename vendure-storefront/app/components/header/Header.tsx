@@ -37,7 +37,7 @@ export function Header({
             <p className="hidden sm:block">
               {t('vendure.exclusive')}{' '}
               <a
-                href={`/${vendorParam}"/sign-up"`}
+                href={`/${vendorParam}/sign-up`}
                 target="_parent"
                 className="underline"
               >
@@ -47,7 +47,7 @@ export function Header({
           </div>
           <div>
             <Link
-              to={isSignedIn ? `/${vendorParam}"/account"` : `/${vendorParam}"/sign-in"`}
+              to={isSignedIn ? `/${vendorParam}/account` : `/${vendorParam}/sign-in`}
               className="flex space-x-1"
             >
               <UserIcon className="w-4 h-4"></UserIcon>

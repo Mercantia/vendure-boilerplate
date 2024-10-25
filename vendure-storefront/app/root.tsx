@@ -118,7 +118,7 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" type="image/png"></link>
+        <link rel="icon" href="/Mercantialogosq.jpg" type="image/png"></link>
         <Meta />
         <Links />
       </head>
@@ -176,7 +176,7 @@ function DefaultSparseErrorPage({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" type="image/png"></link>
+        <link rel="icon" href="/Mercantialogosq.jpg" type="image/png"></link>
         <Meta />
         <Links />
       </head>
@@ -196,7 +196,7 @@ function DefaultSparseErrorPage({
               to="/"
               className="text-base font-medium text-primary-600 hover:text-primary-500 inline-flex gap-2"
             >
-              Go back home
+              Voltar para o início
             </Link>
           </div>
         </main>
